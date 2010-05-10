@@ -30,7 +30,6 @@ describe DataMapper::Observer do
       end
 
     end
-    Adam.auto_migrate!
 
     module ::Alcohol
       class Beer
@@ -49,7 +48,6 @@ describe DataMapper::Observer do
 
       end
     end
-    Alcohol::Beer.auto_migrate!
 
 
     class ::AdamObserver
@@ -89,40 +87,44 @@ describe DataMapper::Observer do
     @beer = Alcohol::Beer.new
   end
 
-  it "should assign a callback" do
-    @adam.should_not be_falling
-    @adam.name = "Adam French"
-    @adam.save
-    @adam.should be_falling
-  end
+  supported_by :all do
 
-  it "should be able to trigger an abort" do
-     @adam.dig_a_hole_to_china
-     @adam.done.should be_nil
-  end
+    it "should assign a callback" do
+      @adam.should_not be_falling
+      @adam.name = "Adam French"
+      @adam.save
+      @adam.should be_falling
+    end
 
-  it "observe should add a class to the neighborhood watch" do
-    AdamObserver.should have(1).observing
-    AdamObserver.observing.first.should == Adam
-  end
+    it "should be able to trigger an abort" do
+       @adam.dig_a_hole_to_china
+       @adam.done.should be_nil
+    end
 
-  it "observe should add more than one class to the neighborhood watch" do
-    DrinkingObserver.should have(2).observing
-    DrinkingObserver.observing.first.should == Adam
-    DrinkingObserver.observing[1].should == Alcohol::Beer
-  end
+    it "observe should add a class to the neighborhood watch" do
+      AdamObserver.should have(1).observing
+      AdamObserver.observing.first.should == Adam
+    end
 
-  it "should observe multiple classes with the same method name" do
-    @adam.should_not be_happy
-    @beer.should_not be_empty
-    @adam.drink
-    @beer.drink
-    @adam.should be_happy
-    @beer.should be_empty
-  end
+    it "observe should add more than one class to the neighborhood watch" do
+      DrinkingObserver.should have(2).observing
+      DrinkingObserver.observing.first.should == Adam
+      DrinkingObserver.observing[1].should == Alcohol::Beer
+    end
 
-  it "should wrap class methods" do
-    lambda {Adam.unite}.should raise_error('Call for help!')
+    it "should observe multiple classes with the same method name" do
+      @adam.should_not be_happy
+      @beer.should_not be_empty
+      @adam.drink
+      @beer.drink
+      @adam.should be_happy
+      @beer.should be_empty
+    end
+
+    it "should wrap class methods" do
+      lambda {Adam.unite}.should raise_error('Call for help!')
+    end
+
   end
 
 end
