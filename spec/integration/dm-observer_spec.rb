@@ -102,12 +102,12 @@ describe DataMapper::Observer do
     end
 
     it "observe should add a class to the neighborhood watch" do
-      AdamObserver.should have(1).observing
+      AdamObserver.observing.size.should == 1
       AdamObserver.observing.first.should == Adam
     end
 
     it "observe should add more than one class to the neighborhood watch" do
-      DrinkingObserver.should have(2).observing
+      DrinkingObserver.observing.size.should == 2
       DrinkingObserver.observing.first.should == Adam
       DrinkingObserver.observing[1].should == Alcohol::Beer
     end
